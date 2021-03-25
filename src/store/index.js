@@ -3,7 +3,7 @@ import Vuex from 'vuex';
 
 Vue.use(Vuex);
 
-export default new Vuex.Store({
+const store = new Vuex.Store({
   strict: true,
   state: {
     msgValue: 'test',
@@ -24,8 +24,8 @@ export default new Vuex.Store({
   actions: {
     addTodo(context, status) {
       context.commit('ADD_TODO', status);
-      // 新增觸發倒計時
-      context.dispatch('setTimer', 5)
+      // 新增時處發計時
+      store.dispatch('setTimer', 8)
     },
     deleteTodo(context, status) {
       context.commit('DELETE_TODO', status);
@@ -37,15 +37,20 @@ export default new Vuex.Store({
       // 更換頁籤
       context.commit('CHANGE_TAB', status);
     },
-    setTimer(context, status) {
-      console.log('timer')
-      context.commit('SET_TIMER', status);
+    setTimer(context, time) {
+      // action處理非同步timer
+      for (let i = 0; i <= time; i++) {
+        setTimeout(() => {
+          let currentTimer = time - i
+          context.commit('SET_TIMER', currentTimer);
+        }, 1000 * i)
+      }
     }
   },
   mutations: {
     ADD_TODO(state, data) {
       // 新增後五秒後才能再新增
-      if (state.timer === 0) {
+      if (state.msgValue && state.timer === 0) {
         const objData = {
           value: data,
           schedule: false,
@@ -75,16 +80,8 @@ export default new Vuex.Store({
       state.tab = data;
     },
     SET_TIMER(state, time = 5) {
-      console.log(time)
-      // 倒數設置 (time傳入幾秒)
-      // 預設0秒時可觸發送出
-      for (let i = 0; i <= time; i++) {
-        setTimeout(() => {
-          console.log(i)
-          state.timer = time - i
-        }, 1000 * i)
-      }
-    }
+      state.timer = time;
+    },
   },
   getters: {
     todoList(state) {
@@ -101,3 +98,5 @@ export default new Vuex.Store({
     }
   },
 });
+
+export default store

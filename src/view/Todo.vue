@@ -2,7 +2,7 @@
   <div>
     <input type="text" v-model="msgValue" v-if="timer === 0">
     <input type="text" v-model="msgValue" v-else disabled>
-    <input type="button" value="新增代辦" @click.prevent="addTodo(msgValue)" v-if="timer === 0">
+    <input type="button" value="新增代辦" @click.prevent="addTodo(msgValue)" v-if="timer === 0 && msgValue !== ''">
     <input type="button" value="禁止輸入" @click.prevent="addTodo(msgValue)" v-else disabled>
     <div>倒數：{{timer}} 秒</div>
     <NavBar />
